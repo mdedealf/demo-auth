@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { Button } from "./ui/button";
 
 const Navbar = () => {
@@ -36,10 +36,10 @@ const Navbar = () => {
         {/* CTA Button */}
         <div className="hidden md:flex md:gap-4">
           <Link to="/login">
-            <Button>Login</Button>
+            <Button variant="default">Login</Button>
           </Link>
           <Link to="/register">
-            <Button className="bg-white text-white">Register</Button>
+            <Button variant="outline">Register</Button>
           </Link>
         </div>
 
