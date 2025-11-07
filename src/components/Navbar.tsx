@@ -1,36 +1,43 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { Button } from "./ui/button";
+import { cn } from "../lib/utils";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   const navLinks = [
-    { name: "Home", href: "#" },
-    { name: "About", href: "#" },
-    { name: "Services", href: "#" },
-    { name: "Portfolio", href: "#" },
-    { name: "Contact", href: "#" },
+    { name: "Home", href: "/" },
+    { name: "Dashboard", href: "/dashboard" },
   ];
 
   return (
     <nav className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md shadow-md z-50">
       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
         {/* Logo */}
-        <div className="text-2xl font-bold text-blue-600">Alfa</div>
+        <div className="text-2xl font-bold text-blue-600">mdedealf</div>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex space-x-8">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className="text-gray-700 hover:text-blue-600 transition-colors duration-200"
-            >
-              {link.name}
-            </a>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = location.pathname === link.href;
+            return (
+              <Link
+                key={link.name}
+                to={link.href}
+                className={cn(
+                  "transition-colors duration-200",
+                  isActive
+                    ? "text-blue-600 font-semibold border-b-2 border-blue-600 pb-1"
+                    : "text-gray-700 hover:text-blue-600"
+                )}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
         </div>
 
         {/* CTA Button */}
@@ -56,16 +63,23 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden bg-white shadow-lg">
           <div className="flex flex-col space-y-3 px-6 py-4">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="text-gray-700 hover:text-blue-600 transition-colors duration-200"
-                onClick={() => setIsOpen(false)}
-              >
-                {link.name}
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = location.pathname === link.href;
+              return (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className={cn(
+                    "transition-colors duration-200",
+                    isActive
+                      ? "text-blue-600 font-semibold border-b-2 border-blue-600 pb-1"
+                      : "text-gray-700 hover:text-blue-600"
+                  )}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
             <Button>Login</Button>
           </div>
         </div>
