@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
+import { useAuthStore } from "../store/auth-store";
+import { AxiosInstance } from "../services/auth/axios-instance";
 
 const Navbar = () => {
+  const { accessToken, clearAuth } = useAuthStore();
+  const navigate = useNavigate();
+
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
@@ -12,6 +17,17 @@ const Navbar = () => {
     { name: "Home", href: "/" },
     { name: "Dashboard", href: "/dashboard" },
   ];
+
+  const logout = async () => {
+    try {
+      await AxiosInstance.post("users/logout");
+      clearAuth();
+    } catch (error) {
+      console.error("Logout request failed", error);
+    } finally {
+      navigate("/login");
+    }
+  };
 
   return (
     <nav className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md shadow-md z-50">
@@ -42,12 +58,20 @@ const Navbar = () => {
 
         {/* CTA Button */}
         <div className="hidden md:flex md:gap-4">
-          <Link to="/login">
-            <Button variant="default">Login</Button>
-          </Link>
-          <Link to="/register">
-            <Button variant="outline">Register</Button>
-          </Link>
+          {!accessToken ? (
+            <>
+              <Link to="/login">
+                <Button variant="default">Login</Button>
+              </Link>
+              <Link to="/register">
+                <Button variant="outline">Register</Button>
+              </Link>
+            </>
+          ) : (
+            <Button variant="destructive" onClick={logout}>
+              Logout
+            </Button>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -80,7 +104,22 @@ const Navbar = () => {
                 </Link>
               );
             })}
-            <Button>Login</Button>
+            <div className="hidden md:flex md:gap-4">
+              {!accessToken ? (
+                <>
+                  <Link to="/login">
+                    <Button variant="default">Login</Button>
+                  </Link>
+                  <Link to="/register">
+                    <Button variant="outline">Register</Button>
+                  </Link>
+                </>
+              ) : (
+                <Button variant="destructive" onClick={logout}>
+                  Logout
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       )}
