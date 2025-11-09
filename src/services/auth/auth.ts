@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosInstance } from "./axios-instance";
+import type { LoginResponse } from "../../types/login-response";
 
 export type RegisterPayload = {
   username: string;
@@ -30,7 +31,10 @@ export type LoginPayload = {
 export const useLogin = () => {
   const mutation = useMutation({
     mutationFn: async (data: LoginPayload) => {
-      const response = await AxiosInstance.post("users/login", data);
+      const response = await AxiosInstance.post<LoginResponse>(
+        "users/login",
+        data
+      );
       return response.data;
     },
   });

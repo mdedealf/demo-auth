@@ -21,6 +21,7 @@ import { Button } from "../components/ui/button";
 import { Link, useNavigate } from "react-router";
 import { useLogin } from "../services/auth/auth";
 import { toast } from "sonner";
+import { useAuthStore } from "../store/auth-store";
 
 const loginSchema = z.object({
   email: z.email("Please enter a valid email address"),
@@ -30,6 +31,8 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const Login = () => {
+  const { setTokens } = useAuthStore();
+
   const navigate = useNavigate();
 
   const { loginUser, isError, isPending, error } = useLogin();
@@ -44,7 +47,10 @@ const Login = () => {
 
   const onSubmit = async (values: LoginFormValues) => {
     try {
-      await loginUser(values);
+      const response = await loginUser(values);
+      const { accessToken, refreshToken } = response.data;
+      setTokens(accessToken, refreshToken);
+
       navigate("/");
       toast.success("Login to account success!");
     } catch (error) {

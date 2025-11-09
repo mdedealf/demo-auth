@@ -4,5 +4,6 @@ export const AxiosInstance = axios.create({
   baseURL: "https://api.freeapi.app/api/v1/",
   headers: {
     "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
   },
 });
