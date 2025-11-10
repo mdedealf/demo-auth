@@ -34,7 +34,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (userRole) localStorage.setItem("userRole", userRole);
     else localStorage.removeItem("userRole");
 
-    set({ accessToken, refreshToken });
+    set({ accessToken, refreshToken, userRole });
   },
 
   clearAuth: () => {
