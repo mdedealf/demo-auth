@@ -49,7 +49,8 @@ const Login = () => {
     try {
       const response = await loginUser(values);
       const { accessToken, refreshToken } = response.data;
-      setTokens(accessToken, refreshToken);
+      const userRole = response.data.user.role;
+      setTokens(accessToken, refreshToken, userRole);
 
       navigate("/");
       toast.success("Login to account success!");

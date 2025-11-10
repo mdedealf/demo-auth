@@ -3,46 +3,37 @@ import Register from "../pages/register";
 import MainLayout from "../layout/main-layout";
 import Login from "../pages/login";
 import Dashboard from "../pages/dashboard";
+import ProtectedRoute from "../components/auth/protected-route";
+import Home from "../pages/home";
+import PageNotFound from "../pages/404-page";
+import RoleBasedProtectedRoute from "../components/auth/role-based-protected-route";
+import Unauthorized from "../pages/unauthorized";
 import Product from "../pages/product";
-import ProtectedRoute from "../auth/protected-route";
+import PublicRoute from "../components/auth/public-route";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
     children: [
+      { index: true, element: <Home /> },
       {
-        path: "/",
-        element: (
-          <div className="h-screen w-screen justify-center items-center flex bg-black text-white">
-            Hello World
-          </div>
-        ),
+        element: <PublicRoute />,
+        children: [
+          { path: "/login", element: <Login /> },
+          { path: "/register", element: <Register /> },
+        ],
       },
       {
-        path: "/register",
-        element: <Register />,
+        element: <ProtectedRoute />,
+        children: [{ path: "/product", element: <Product /> }],
       },
       {
-        path: "/login",
-        element: <Login />,
+        element: <RoleBasedProtectedRoute allowedRole={["ADMIN"]} />,
+        children: [{ path: "/dashboard", element: <Dashboard /> }],
       },
-      {
-        path: "/product",
-        element: (
-          <ProtectedRoute>
-            <Product />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/dashboard",
-        element: (
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        ),
-      },
+      { path: "/unauthorized", element: <Unauthorized /> },
+      { path: "*", element: <PageNotFound /> },
     ],
   },
 ]);
