@@ -3,6 +3,8 @@ import Register from "../pages/register";
 import MainLayout from "../layout/main-layout";
 import Login from "../pages/login";
 import Dashboard from "../pages/dashboard";
+import Product from "../pages/product";
+import ProtectedRoute from "../auth/protected-route";
 
 export const router = createBrowserRouter([
   {
@@ -26,8 +28,20 @@ export const router = createBrowserRouter([
         element: <Login />,
       },
       {
+        path: "/product",
+        element: (
+          <ProtectedRoute>
+            <Product />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: "/dashboard",
-        element: <Dashboard />,
+        element: (
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

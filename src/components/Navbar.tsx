@@ -5,16 +5,19 @@ import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 import { useAuthStore } from "../store/auth-store";
 import { AxiosInstance } from "../services/auth/axios-instance";
+import { toast } from "sonner";
 
 const Navbar = () => {
-  const { accessToken, clearAuth } = useAuthStore();
-  const navigate = useNavigate();
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const clearAuth = useAuthStore((state) => state.clearAuth);
 
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
   const navLinks = [
     { name: "Home", href: "/" },
+    { name: "Product", href: "/product" },
     { name: "Dashboard", href: "/dashboard" },
   ];
 
@@ -22,6 +25,7 @@ const Navbar = () => {
     try {
       await AxiosInstance.post("users/logout");
       clearAuth();
+      toast.success("Logout success!");
     } catch (error) {
       console.error("Logout request failed", error);
     } finally {
